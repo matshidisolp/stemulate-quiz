@@ -12,18 +12,20 @@ export default function QuizPage() {
     } = useQuizStore();
 
     //will use API data here
-    if (questions.length === 0) {
-        setQuestions([
-            {
+    useEffect(() => {
+            if (questions.length === 0) {
+             setQuestions([
+               {
                 question: "What is the symbol for helium?",
                 options: ["H", "He", "Hm", "Hi"],
-            }, 
-            {
+               }, 
+               {
                 question: "Which planet is known as the red planet?",
                 options: ["Earth", "Mars", "Venus", "Jupiter"],
-            }
-        ]);
-    }
+               },
+           ]);
+       }
+    }, [questions.length, setQuestion]);
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -34,7 +36,8 @@ export default function QuizPage() {
         nextQuestion();
     };
 
-    if (currentQuestionIndex >= questions.length) {
+    // Completed quiz
+    if (questions.length > 0 && currentQuestionIndex >= questions.length) {
         return (
             <div className="flex flex-col min-h-screen bg-gray-100">
                 <Header />
@@ -46,6 +49,20 @@ export default function QuizPage() {
         );
     }
 
+    // For while questions are loading
+    if (questions.length === 0) {
+        return (
+            <div className="flex flex-col min-h-screen bg-gray-100">
+                <Header />
+                <main className="flex items-center justify-center flex-grow">
+                    <p>Loading questions...</p>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
+    // Show current question
     return (
         <div className="flex flex-col min-h-screen bg-gray-100">
             <Header />
