@@ -1,31 +1,18 @@
-import './App.css';
-import { createBrowserRouter, RouterProvider,
-} from "react-router";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>template layout</div>,
-    children: [
-        {
-            index: true,
-            element: <p>Home Page</p>
-        },
-        {
-            path:"quiz",
-            element: <p>Quiz Page</p>
-        },
-        {
-            path:"results",
-            element: <p>Results Page</p>
-        }
-    ]
-  },
-]);
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import QuizPage from "./pages/QuizPage";
+import ResultsPage from "./pages/ResultsPage";
 
 function App() {
-
-  return <RouterProvider router={router} />;
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/quiz" element={<QuizPage />} />
+                <Route path="/results" element={<ResultsPage />} />
+            </Routes>
+        </Router>
+    );
 }
 
-export default App
+export default App;
