@@ -1,24 +1,59 @@
 import Header from "../components/Header";
 import QuestionCard from "../components/QuestionCard";
+import useQuizStore from "../store/quizStore";
 
 export default function QuizPage() {
-    //will use API data will be here 
-    const question = "What is the symbol for helium?";
-    const options = ["H", "He", "Hm", "Hi"];
+    const {
+        questions, 
+        currentQuestionIndex,
+        setQuestions,
+        increaseScore,
+        nextQuestion,
+    } = useQuizStore();
+
+    //will use API data here
+    if (questions.length === 0) {
+        setQuestions([
+            {
+                question: "What is the symbol for helium?",
+                options: ["H", "He", "Hm", "Hi"],
+            }, 
+            {
+                question: "Which planet is known as the red planet?",
+                options: ["Earth", "Mars", "Venus", "Jupiter"],
+            }
+        ]);
+    }
+
+    const currentQuestion = questions[currentQuestionIndex];
 
     const handleAnswerSelect = (answer) => {
-        console.log("Selectd answer:", answer);
-        //Will use Zustand state management
+        if (answer === currentQuestion.answer) {
+            increaseScore();
+        }
+        nextQuestion();
     };
 
+    if (currentQuestionIndex >= questions.length) {
+        return (
+            <div className="flex flex-col min-h-screen bg-gray-100">
+                <Header />
+                <main className="flex items-center justify-center flex-grow">
+                    <p className="text-lg">Quiz completed!</p>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
+
     return (
-        <div classname="min-h-screen bg-gray-100">
+        <div className="flex flex-col min-h-screen bg-gray-100">
             <Header />
-            <main className="flex item-center justify-center h-[80vh]">
+            <main className="flex items-center justify-center flex-grow">
                 <QuestionCard
-                   question={question}
-                   options={options}
-                   onAnswerSelect={handleAnswerSelect}
+                  question={currentQuestion.question}
+                  options={currentQuestion.options}
+                  onAnswerSelect={handleAnswerSelect}
                 />
             </main>
             <Footer />
