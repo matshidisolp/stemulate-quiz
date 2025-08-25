@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import QuestionCard from "../components/QuestionCard";
 import useQuizStore from "../store/quizStore";
 
@@ -16,21 +18,28 @@ export default function QuizPage() {
             if (questions.length === 0) {
              setQuestions([
                {
+                id: 1,
                 question: "What is the symbol for helium?",
                 options: ["H", "He", "Hm", "Hi"],
+                answer: "He",
                }, 
                {
+                id: 2,
                 question: "Which planet is known as the red planet?",
                 options: ["Earth", "Mars", "Venus", "Jupiter"],
+                answer: "Mars",
                },
            ]);
        }
-    }, [questions.length, setQuestion]);
+    }, [questions.length, setQuestions]);
 
-    const currentQuestion = questions[currentQuestionIndex];
+    const currentQuestion =
+        questions.length > 0 && currentQuestionIndex < questions.length
+            ? questions[currentQuestionIndex]
+            : null;
 
     const handleAnswerSelect = (answer) => {
-        if (answer === currentQuestion.answer) {
+        if (currentQuestion && answer === currentQuestion.answer) {
             increaseScore();
         }
         nextQuestion();

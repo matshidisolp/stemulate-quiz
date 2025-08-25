@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 // Store to manage quiz state
 const useQuizStore = create((set) => ({
-    question: [],
+    questions: [],
     currentQuestionIndex: 0,
     score: 0,
     loading: false,

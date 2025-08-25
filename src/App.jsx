@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import QuizPage from "./pages/QuizPage";
 import ResultsPage from "./pages/ResultsPage";
 
-function App() {
+export default function App() {
     return (
         <Router>
             <Routes>
@@ -14,5 +14,3 @@ function App() {
         </Router>
     );
 }
-
-export default App;
