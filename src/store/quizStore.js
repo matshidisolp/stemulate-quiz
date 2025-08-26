@@ -9,7 +9,7 @@ const useQuizStore = create((set) => ({
     error: null, 
 
     setQuestions: (questions) =>
-        set({ questions, currentQuestionIndex: 0, score: 0 }),
+        set({ questions, currentQuestionIndex: 0, score: 0, error: null }),
 
     nextQuestion: () =>
         set((state) => ({
@@ -22,7 +22,6 @@ const useQuizStore = create((set) => ({
             })),
 
             setLoading: (loading) => set({ loading }),
-
             setError: (error) => set({ error }),
 }));
 

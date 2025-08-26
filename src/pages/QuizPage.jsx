@@ -1,88 +1,129 @@
-import { useEffect } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import QuestionCard from "../components/QuestionCard";
 import useQuizStore from "../store/quizStore";
+import { fetchQuestions } from "../services/api";
 
 export default function QuizPage() {
-    const {
-        questions, 
-        currentQuestionIndex,
-        setQuestions,
-        increaseScore,
-        nextQuestion,
-    } = useQuizStore();
+  const {
+    questions,
+    currentQuestionIndex,
+    score,
+    setQuestions,
+    nextQuestion,
+    increaseScore,
+    loading,
+    setLoading,
+    error,
+    setError,
+  } = useQuizStore();
 
-    //will use API data here
-    useEffect(() => {
-            if (questions.length === 0) {
-             setQuestions([
-               {
-                id: 1,
-                question: "What is the symbol for helium?",
-                options: ["H", "He", "Hm", "Hi"],
-                answer: "He",
-               }, 
-               {
-                id: 2,
-                question: "Which planet is known as the red planet?",
-                options: ["Earth", "Mars", "Venus", "Jupiter"],
-                answer: "Mars",
-               },
-           ]);
-       }
-    }, [questions.length, setQuestions]);
+  // ✅ prevents StrictMode double-fetch in development
+  const requestedRef = useRef(false);
 
-    const currentQuestion =
-        questions.length > 0 && currentQuestionIndex < questions.length
-            ? questions[currentQuestionIndex]
-            : null;
-
-    const handleAnswerSelect = (answer) => {
-        if (currentQuestion && answer === currentQuestion.answer) {
-            increaseScore();
-        }
-        nextQuestion();
-    };
-
-    // Completed quiz
-    if (questions.length > 0 && currentQuestionIndex >= questions.length) {
-        return (
-            <div className="flex flex-col min-h-screen bg-gray-100">
-                <Header />
-                <main className="flex items-center justify-center flex-grow">
-                    <p className="text-lg">Quiz completed!</p>
-                </main>
-                <Footer />
-            </div>
-        );
+  const loadQuestions = useCallback(async () => {
+    setLoading(true);
+    try {
+      // request a small set with no category/difficulty to maximize success
+      const data = await fetchQuestions(10);
+      setQuestions(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message || "Failed to load questions.");
+    } finally {
+      setLoading(false);
     }
+  }, [setLoading, setQuestions, setError]);
 
-    // For while questions are loading
+  useEffect(() => {
+    if (requestedRef.current) return; // ✅ guard
+    requestedRef.current = true;
     if (questions.length === 0) {
-        return (
-            <div className="flex flex-col min-h-screen bg-gray-100">
-                <Header />
-                <main className="flex items-center justify-center flex-grow">
-                    <p>Loading questions...</p>
-                </main>
-                <Footer />
-            </div>
-        );
+      loadQuestions();
     }
+  }, [questions.length, loadQuestions]);
 
-    // Show current question
+  const currentQuestion =
+    questions.length > 0 && currentQuestionIndex < questions.length
+      ? questions[currentQuestionIndex]
+      : null;
+
+  const handleAnswerSelect = (answer) => {
+    if (!currentQuestion) return;
+    if (answer === currentQuestion.answer) increaseScore();
+    nextQuestion();
+  };
+
+  // --- Render states ---
+  if (loading) {
     return (
-        <div className="flex flex-col min-h-screen bg-gray-100">
-            <Header />
-            <main className="flex items-center justify-center flex-grow">
-                <QuestionCard
-                  question={currentQuestion.question}
-                  options={currentQuestion.options}
-                  onAnswerSelect={handleAnswerSelect}
-                />
-            </main>
-            <Footer />
-        </div>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <Header />
+        <main className="flex items-center justify-center flex-grow">
+          <p>Loading questions...</p>
+        </main>
+        <Footer />
+      </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <Header />
+        <main className="flex flex-col items-center justify-center gap-4 flex-grow">
+          <p className="text-red-600">{error}</p>
+          <button
+            onClick={() => {
+              requestedRef.current = false; // allow retry
+              loadQuestions();
+            }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Try Again
+          </button>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (questions.length > 0 && currentQuestionIndex >= questions.length) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <Header />
+        <main className="flex items-center justify-center flex-grow">
+          <p className="text-lg">Quiz completed! 🎉</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <Header />
+        <main className="flex items-center justify-center flex-grow">
+          <p>No questions available.</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <Header />
+      <main className="flex items-center justify-center flex-grow p-4">
+        <QuestionCard
+          question={currentQuestion.question}
+          options={currentQuestion.options}
+          onAnswerSelect={handleAnswerSelect}
+        />
+      </main>
+      <Footer />
+    </div>
+  );
 }
