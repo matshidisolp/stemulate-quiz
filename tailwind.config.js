@@ -1,11 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+module.exports = {
+  content: ["./index.html","./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+        fontFamily: {
+            chelsea: ['"Chelsea Market"', "cursive"], // App custom font
+        },
+        colors: {
+            brandOlive: "#BBB490",  //background color
+        },
+    },
   },
   plugins: [],
-}
-
+};

@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useRef } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/ui/Header";
+import Footer from "../components/ui/Footer";
 import QuestionCard from "../components/QuestionCard";
 import useQuizStore from "../store/quizStore";
 import { fetchQuestions } from "../services/api";
@@ -19,8 +20,8 @@ export default function QuizPage() {
     setError,
   } = useQuizStore();
 
-  // ✅ prevents StrictMode double-fetch in development
-  const requestedRef = useRef(false);
+  const navigate = useNavigate(); //navigation hook
+  const requestedRef = useRef(false);  //prevent strictMode double-fetch in dev
 
   const loadQuestions = useCallback(async () => {
     setLoading(true);
@@ -37,7 +38,7 @@ export default function QuizPage() {
   }, [setLoading, setQuestions, setError]);
 
   useEffect(() => {
-    if (requestedRef.current) return; // ✅ guard
+    if (requestedRef.current) return; // guard
     requestedRef.current = true;
     if (questions.length === 0) {
       loadQuestions();
@@ -52,7 +53,13 @@ export default function QuizPage() {
   const handleAnswerSelect = (answer) => {
     if (!currentQuestion) return;
     if (answer === currentQuestion.answer) increaseScore();
-    nextQuestion();
+
+    // If last question, navigate to ResultsPage
+    if (currentQuestionIndex + 1 >= questions.length) {
+        navigate("/results");
+    } else {
+        nextQuestion();
+    }
   };
 
   // --- Render states ---
@@ -83,18 +90,6 @@ export default function QuizPage() {
           >
             Try Again
           </button>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (questions.length > 0 && currentQuestionIndex >= questions.length) {
-    return (
-      <div className="flex flex-col min-h-screen bg-gray-100">
-        <Header />
-        <main className="flex items-center justify-center flex-grow">
-          <p className="text-lg">Quiz completed! 🎉</p>
         </main>
         <Footer />
       </div>

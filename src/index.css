@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global brand background and text default */
+body {
+    background-color: #BBB490;
+    color: black;
+    font-family: system-ui, sans-serif;
+}
