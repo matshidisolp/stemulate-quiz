@@ -1,15 +1,17 @@
 import { Link } from "react-router-dom";
-import Header from "../components/ui/Header";
 import Footer from "../components/ui/Footer";
 import heroMark from "../assets/Logo.svg";
+import AuthForm from "../components/Auth/AuthForm";
+import { useAuthStore } from "../store/auth.store";
 
 export default function HomePage() {
+    const { isAuthenticated } = useAuthStore();
+
     return (
         <div className="flex flex-col min-h-screen">
-            <Header />
 
-            {/* Logo + slogan */}
             <main className="flex flex-col tems-center justify-center flex-grow px-4 text-center">
+                {/* Logo + slogan */}
               <figure className="flex flex-col items-center">
                 <img
                 src={heroMark}
@@ -19,26 +21,44 @@ export default function HomePage() {
                 </figure>
 
                 {/* Heading */}
-                <h1 className="font-chelsea text-[32px] sm:text-[36px] lg:text-[44px] leading-tight text-black font-bold mb-4">
+                <h1 className="font-chelsea text-[48px] sm:text-[60px] lg:text-[80px] leading-tight text-black font-bold mb-4">
                     Welcome to STEMulate Quiz!
                 </h1>
 
-                {/* Introductory paragraph */}
-                <p className="max-w-3xl text-center sm:text-lg italic font-extralight text-black mb-10">
-                    Get ready to boost your brain power with fun and challenging quizzes in different topics.
-                    Whether you are revising for exams or just want to test your knowledge - STEMulate makes
-                    learning easy and exciting!
-                </p>
+                {/* Introductory paragraph- stacked */}
+                <div className="max-w-3xl text-center italic font-extralight text-black mb-8">
+                    <p className="text-base sm:text-lg lg:text-2xl mb-2">
+                        Get ready to boost your brain power with fun and challenging quizzes in Math and Science.
+                    </p>
+                    <p className="text-base sm:text-lg lg:text-2xl mb-2">
+                        Whether you are revising for exams or just want to test your knowledge –
+                    </p>
+                    <p className="text-base sm:text-lg lg:text-2xl">
+                        STEMulate makes learning easy and exciting!
+                    </p>
+                </div>
 
-                <Link
-                  to="/quiz"
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-700"
-                  role="button"
-                  onClick={() => console.log("Navigating to /quiz")}
+                {/* Auth */}
+                <div className="w-full mb-8">
+                    <AuthForm />
+                </div>
+
+                {/* Start Quiz button only when user is authenticated */}
+                {isAuthenticated ? (
+                    <Link
+                      to="/quiz"
+                      className="bg-[#3C520A] text-white px-6 py-3 rounded-lg shadow hover:opacity-95"
+                      role="button"
                   >
                     Start Quiz
-                  </Link>
+                  </Link>   
+                ) : (
+                    <p className="text-sm text-black/70">
+                        Log in or create an account to start the quiz.
+                    </p>
+                )}
             </main>
+            
             <Footer />
         </div>
     );

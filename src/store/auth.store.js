@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { loginUser, SignUpUser } from '../services/auth.service';
+import { loginUser, signUpUser, signOutUser } from '../services/auth.service';
 
 export const useAuthStore = create((set) => ({
     // Initial state
@@ -8,31 +8,40 @@ export const useAuthStore = create((set) => ({
     isLoading: false,
     error: null,
 
+    // Helper for errors
+    /* clearError: () => set({ error: null }), */
+
     // Actions
     login: async (email, password) => {
         set({ isLoading: true, error: null});
         try {
             const user=await loginUser(email, password);
-            set({ user:user, isAuthenticated: true, isLoading: false});
+            set({ user, isAuthenticated: true, isLoading: false});
+            return user;
         } catch (error) {
-            set({ error: error.message, isLoading: false });
-            throw error;
+            set({ error: error.message || "Login failed", isLoading: false });
         }
-    },
-
-    logout: () => {
-        // Firebase sign-out logic 
-        set({ user: null, isAuthenticated: false });
     },
 
     signup: async (email, password) => {
         set({ isLoading: true, error: null });
         try {
-            const user = await SignUpUser(email, password);
+            const user = await signUpUser(email, password);
             set({ user: user, isAuthenticated: true, isLoading: false });
+            return user;
         } catch (error) {
-            set({ error: error.message, isLoading: false });
+            set({ error: error.message || "Sign up failed", isLoading: false });
             throw error;
+        }
+    },
+ 
+    logout: async() => {
+        set({ isLoading: true, error: null });
+        try {
+            await signOutUser();
+            set({ user: null, isAuthenticated: false, isLoading: false });
+        } catch (error) {
+            set({ error: error.message || "Logout failed", isLoading: false });
         }
     },
 }));

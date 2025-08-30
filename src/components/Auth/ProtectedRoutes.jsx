@@ -1,19 +1,17 @@
-import { Navigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "../../store/auth.store";
 
-const QuizPage = () => {
-    const { isAuthenticated } = useAuthStore();
+export default function ProtectedRoute({ children }) {
+    const { isAuthenticated, isLoading } = useAuthStore();
+    const location = useLocation();
 
-    if(!isAuthenticated) {
-        return <Navigate to='/login' />;
+    // Render nothing while auth state is busy
+    if (isLoading) return null;
+
+    if (!isAuthenticated) {
+        // Preserve where user wanted to go so you can send them back after login
+        return <Navigate to="/" state={{ from: location }} replace />;
     }
 
-    return (
-        <div>
-            <h1>Welcome to STEMulate Quiz</h1>
-            <p>Get ready to boost your brain power with fun and challenging quizzes in Math and Science. 
-                Whether you are revising for exams or just want to test your knowledge - STEMulate makes learning easy and exciting!
-            </p>
-        </div>
-    );
-};
+    return children;
+}

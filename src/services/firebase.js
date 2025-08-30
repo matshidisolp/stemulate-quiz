@@ -1,15 +1,15 @@
 import { initializeApp } from 'firebase/app';
-import { firebaseEnvVariable } from './config';
+import { firebaseEnvVariables } from './config';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: firebaseEnvVariable.apiKey,
-  authDomain: firebaseEnvVariable.authDomain,
-  projectId: firebaseEnvVariable.projectId,
-  storageBucket: firebaseEnvVariable.storageBucket,
-  messagingSenderId: firebaseEnvVariable.messagingSenderId,
-  appId: firebaseEnvVariable.appId
+  apiKey: firebaseEnvVariables.apiKey,
+  authDomain: firebaseEnvVariables.authDomain,
+  projectId: firebaseEnvVariables.projectId,
+  storageBucket: firebaseEnvVariables.storageBucket,
+  messagingSenderId: firebaseEnvVariables.messagingSenderId,
+  appId: firebaseEnvVariables.appId
 };
 
 const app = initializeApp(firebaseConfig);
