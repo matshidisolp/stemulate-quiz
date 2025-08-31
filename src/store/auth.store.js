@@ -9,7 +9,7 @@ export const useAuthStore = create((set) => ({
     error: null,
 
     // Helper for errors
-    /* clearError: () => set({ error: null }), */
+    clearError: () => set({ error: null }),
 
     // Actions
     login: async (email, password) => {

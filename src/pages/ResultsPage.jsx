@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/ui/Header";
 import Footer from "../components/ui/Footer";
 import useQuizStore from "../store/quizStore";
+import StartPage from "./StartPage";
 
 export default function ResultsPage() {
     const { score, questions, setQuestions } = useQuizStore();
@@ -9,7 +10,7 @@ export default function ResultsPage() {
 
     const handleRestart = () => {
         setQuestions([]);
-        navigate("/");
+        navigate("/start");
     };
 
     return (

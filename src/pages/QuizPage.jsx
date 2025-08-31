@@ -10,7 +10,7 @@ export default function QuizPage() {
   const {
     questions,
     currentQuestionIndex,
-    score,
+    score,                    // reserved for Results page
     setQuestions,
     nextQuestion,
     increaseScore,
@@ -18,54 +18,62 @@ export default function QuizPage() {
     setLoading,
     error,
     setError,
+    settings,                 // { amount, category, difficulty }
   } = useQuizStore();
 
-  const navigate = useNavigate(); //navigation hook
-  const requestedRef = useRef(false);  //prevent strictMode double-fetch in dev
+  const navigate = useNavigate();
+  const requestedRef = useRef(false); // prevent StrictMode double-fetch in dev
 
+  // fetch questions once (using settings)
   const loadQuestions = useCallback(async () => {
     setLoading(true);
     try {
-      // request a small set with no category/difficulty to maximize success
-      const data = await fetchQuestions(10);
+      const data = await fetchQuestions(
+        settings.amount,
+        settings.category,
+        settings.difficulty
+      );
       setQuestions(data);
       setError(null);
     } catch (err) {
-      setError(err.message || "Failed to load questions.");
+      setError(err?.message || "Failed to load questions. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [setLoading, setQuestions, setError]);
+  }, [setLoading, setQuestions, setError, settings]);
 
   useEffect(() => {
-    if (requestedRef.current) return; // guard
+    if (requestedRef.current) return;
     requestedRef.current = true;
-    if (questions.length === 0) {
-      loadQuestions();
-    }
+    if (questions.length === 0) loadQuestions();
   }, [questions.length, loadQuestions]);
 
+  // current question 
   const currentQuestion =
     questions.length > 0 && currentQuestionIndex < questions.length
       ? questions[currentQuestionIndex]
       : null;
 
+  //  handle answer 
   const handleAnswerSelect = (answer) => {
     if (!currentQuestion) return;
-    if (answer === currentQuestion.answer) increaseScore();
 
-    // If last question, navigate to ResultsPage
+    if (answer === currentQuestion.answer) {
+      increaseScore();
+    }
+
+    // last question -> go to results
     if (currentQuestionIndex + 1 >= questions.length) {
-        navigate("/results");
+      navigate("/results");
     } else {
-        nextQuestion();
+      nextQuestion();
     }
   };
 
-  // --- Render states ---
+  //  render states 
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-100">
+      <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex items-center justify-center flex-grow">
           <p>Loading questions...</p>
@@ -77,7 +85,7 @@ export default function QuizPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-100">
+      <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex flex-col items-center justify-center gap-4 flex-grow">
           <p className="text-red-600">{error}</p>
@@ -86,7 +94,7 @@ export default function QuizPage() {
               requestedRef.current = false; // allow retry
               loadQuestions();
             }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-[#3C520A] text-white px-4 py-2 rounded-xl hover:opacity-95"
           >
             Try Again
           </button>
@@ -98,7 +106,7 @@ export default function QuizPage() {
 
   if (!currentQuestion) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-100">
+      <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex items-center justify-center flex-grow">
           <p>No questions available.</p>
@@ -108,8 +116,9 @@ export default function QuizPage() {
     );
   }
 
+  //  main quiz view 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex items-center justify-center flex-grow p-4">
         <QuestionCard

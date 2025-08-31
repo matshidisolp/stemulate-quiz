@@ -28,7 +28,7 @@ export default function HomePage() {
                 {/* Introductory paragraph- stacked */}
                 <div className="max-w-3xl text-center italic font-extralight text-black mb-8">
                     <p className="text-base sm:text-lg lg:text-2xl mb-2">
-                        Get ready to boost your brain power with fun and challenging quizzes in Math and Science.
+                        Get ready to boost your brain power with fun and challenging quizzes in Math, Science and more.
                     </p>
                     <p className="text-base sm:text-lg lg:text-2xl mb-2">
                         Whether you are revising for exams or just want to test your knowledge –

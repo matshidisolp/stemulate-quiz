@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../store/auth.store";
 
 export default function AuthForm() {
@@ -7,35 +8,47 @@ export default function AuthForm() {
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
 
-// Individual style to avoid re-rendering
-const login = useAuthStore((s) => s.login);
-const signup = useAuthStore((s) => s.signup);
-const isLoading = useAuthStore((s) => s.isLoading);
-const error = useAuthStore((s) => s.error);
-const clearError = useAuthStore((s) => s.clearError);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const nextPath = location.state?.from?.pathname || "/start";
 
-const isSignup = mode === "signup";
+    // Individual style to avoid re-rendering
+    const login = useAuthStore((s) => s.login);
+    const signup = useAuthStore((s) => s.signup);
+    const isLoading = useAuthStore((s) => s.isLoading);
+    const error = useAuthStore((s) => s.error);
+    const clearError = useAuthStore((s) => s.clearError ??(() => {}));
 
-// extracted validation
-const canSubmit = useMemo(() => {
-    if(!email || !password) return false;
-    if(isSignup && password !== confirm) return false;
-    if(password.length < 6) return false;
-    return true;
-}, [email, password, confirm, isSignup]);
+    const isSignup = mode === "signup";
 
-const onSubmit = async (e) => {
+    // Extracted validation
+    const canSubmit = useMemo(() => {
+        if(!email || !password) return false;
+        if(isSignup && password !== confirm) return false;
+        if(password.length < 6) return false;
+        return true;
+    }, [email, password, confirm, isSignup]);
+    
+    const onSubmit = async (e) => {
     e.preventDefault();
-    clearError();
-
+    clearError?.();
     try {
         if (isSignup) {
             await signup(email, password);
         } else {
-            await login(email, password);
+            await login(email,password);
         }
+
+        // Sanity check Log
+        console.log("Auth OK -> navigate to:", nextPath);
+
+        navigate(nextPath, {replace: true });
+
     } catch {
+        // console.error("Auth failed:", e?.code || e?.message || e); 
         // Error is setup in store
+        // if Firebase rejects auth- recorded here
+        console.error("Auth failed:", err?.code || err?.message || err);
     }
 };
 
@@ -87,7 +100,7 @@ return (
          )}
 
          {/* Form */}
-         <form onSubmit={onSubmit} className="w-full max-w-xl grid gap-6 text-left">
+         <form onSubmit={onSubmit} className="w-full max-w-xl grid gap-6 text-center">
             <div>
                 <label className="mb-2 block text-sm font-medium text-black">Email</label>
                 <input
@@ -99,7 +112,7 @@ return (
                     setEmail(e.target.value);
                     if (error) clearError();
                   }}
-                  className="w-full h-14 border-2 border-black/20 rounded-2xl bg-white px-4 text-[15px] placeholder-black/40 outline-none focus:ring-2 focus:ring-[#3C520A]/40 focus:border-[#3C520A] shadow-sm"
+                  className="w-medium h-48 border-2 border-black/20 rounded-2xl bg-white px-4 text-[15px] placeholder-black/40 outline-none focus:ring-2 focus:ring-[#3C520A]/40 focus:border-[#3C520A] shadow-sm"
                   placeholder="john.smith@example.com"
                   />
             </div>
@@ -116,7 +129,7 @@ return (
                     setPassword(e.target.value);
                     if (error) clearError();
                   }}
-                  className="w-full h-14 border-2 border-black/20 rounded-2xl bg-white px-4 text-[15px] placeholder-black/40 outline-none focus:ring-2 focus:ring-[#3C520A]/40 focus:border-[#3C520A] shadow-sm"
+                  className="w-medium h-48 border-2 border-black/20 rounded-2xl bg-white px-4 text-[15px] placeholder-black/40 outline-none focus:ring-2 focus:ring-[#3C520A]/40 focus:border-[#3C520A] shadow-sm"
                   placeholder="******"
                 />
             </div>
@@ -134,7 +147,7 @@ return (
                         setConfirm(e.target.value);
                         if (error) clearError();
                       }}
-                      className="w-full h-14 border-2 border-black/20 rounded-2xl bg-white px-4 text-[15px] placeholder-black/40 outline-none focus:ring-2 focus:ring-[#3C520A]/40 focus:border-[#3C520A] shadow-sm"
+                      className="w-medium h-48 border-2 border-black/20 rounded-2xl bg-white px-4 text-[15px] placeholder-black/40 outline-none focus:ring-2 focus:ring-[#3C520A]/40 focus:border-[#3C520A] shadow-sm"
                       placeholder="******"
                     />
                     {confirm && confirm !== password && (
@@ -147,7 +160,7 @@ return (
                 <button
                   type="submit"
                   disabled={isLoading || !canSubmit}
-                  className="h-14 w-48 rounded-3xl bg-[#3C520A] bg-[#3C520A] text-white font-medium shadow hover:opacity-95 disabled:opacity-60"
+                  className="h-24 w-48 rounded-3xl bg-[#3C520A] text-white font-medium shadow hover:opacity-95 disabled:opacity-60"
                 >
                   {isLoading ? "Please wait..." : isSignup ? "Create account" : "log in"}
                 </button>
