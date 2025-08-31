@@ -4,6 +4,7 @@ import QuizPage from "./pages/QuizPage";
 import ResultsPage from "./pages/ResultsPage";
 import StartPage from "./pages/StartPage";
 import ProtectedRoute from "./components/Auth/ProtectedRoutes";
+import NotFoundPage from "./pages/NotFound";
 
 export default function App() {
     return (
@@ -31,6 +32,8 @@ export default function App() {
                         <ResultsPage />
                     </ProtectedRoute>
                 } />
+                {/* Catch-all for 404 */}
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>
     );
