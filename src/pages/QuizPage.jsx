@@ -120,12 +120,14 @@ export default function QuizPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex items-center justify-center flex-grow p-4">
-        <QuestionCard
-          question={currentQuestion.question}
-          options={currentQuestion.options}
-          onAnswerSelect={handleAnswerSelect}
-        />
+      <main className="flex flex-grow items-start justify-center px-4 py-10">
+        <div className="w-full mx-auto max-w-2xl">
+            <QuestionCard
+              question={currentQuestion.question}
+              options={currentQuestion.options}
+              onAnswerSelect={handleAnswerSelect}
+            />
+        </div>
       </main>
       <Footer />
     </div>

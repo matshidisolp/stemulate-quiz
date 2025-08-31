@@ -2,15 +2,27 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/ui/Header";
 import Footer from "../components/ui/Footer";
 import useQuizStore from "../store/quizStore";
-import StartPage from "./StartPage";
+import { useAuthStore } from "../store/auth.store";
 
 export default function ResultsPage() {
     const { score, questions, setQuestions } = useQuizStore();
+    const { logout } = useAuthStore();
     const navigate = useNavigate();
 
+    // Restart Quiz
     const handleRestart = () => {
         setQuestions([]);
         navigate("/start");
+    };
+
+    //Sign out, clear auth and return to home
+    const handleSignOut = async () => {
+        try {
+            await logout();
+            navigate("/");
+        } catch (err) {
+            console.error("Sign out failed:", err.message || err);
+        }
     };
 
     return (
@@ -21,11 +33,23 @@ export default function ResultsPage() {
                 <p className="mb-6">
                     You scored {score} out of {questions.length}
                 </p>
-                <button
-                   onClick={handleRestart}
-                   className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700">
-                    Play Again
-                   </button>
+
+                {/* Navigation buttons */}
+                <div className="flex gap-6">
+                    <button
+                      onClick={handleRestart}
+                      className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700"
+                    >
+                        Play Again
+                    </button>
+
+                    <button
+                      onClick={handleSignOut}
+                      className="bg-red-600 text-white px-6 py-3 rounded-lg shadow hover:bg-red-700"
+                    >
+                        Sign Out
+                    </button>
+                </div>
             </main>
             <Footer />
         </div>
