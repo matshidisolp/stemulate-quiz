@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global brand background and text default */
-body {
-    background-color: #BBB490;
-    color: black;
-    font-family: system-ui, sans-serif;
-}
+/* Reset so form controls respect Tailwind height/padding */
+  input, select, button, textarea {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    line-height: 1.25;
+  }
+
+/* Brand background */
+:root { --brand-olive: #BBB490; }
+html, body, #root { height: 100%; }
+body { background-color: var(--brand-olive); }

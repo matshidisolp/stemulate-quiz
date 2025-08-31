@@ -10,6 +10,8 @@ export default function App() {
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
+
+                {/* Protected Pages */}
                 <Route path="/start" element={
                     <ProtectedRoute>
                         <StartPage />
@@ -24,7 +26,11 @@ export default function App() {
                   }
                 />
 
-                <Route path="/results" element={<ResultsPage />} />
+                <Route path="/results" element={
+                    <ProtectedRoute>
+                        <ResultsPage />
+                    </ProtectedRoute>
+                } />
             </Routes>
         </Router>
     );
