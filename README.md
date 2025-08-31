@@ -1,12 +1,51 @@
-# React + Vite
+# STEMulate Quiz App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ STEMulate Quiz is an interactive web application designed to make learning SCience, Teachnology, Engineering, and Mathematics (STEM) fun, engaging, and accessible. It is built with React, Firebase, Zustand, and TailwindCSS, the app fetches quiz questions from the Open Trivia Database and provides users with a smooth and responsive experience. 
 
-Currently, two official plugins are available:
+ # Features
+ -User Authentication: Sign up, log in, and log out with Firebase.
+ -Customizable Quiz: Choose topic, difficulty level, and number of questions. 
+ -Score Tracking: Displays results at the end of each quiz.
+ -Responsive Design: Optimized for mobile, tablet and desktop using TailwindCSS for a seamless user experience.
+ -State Management: Powered by Zustand for clean and predictable app state that is easy to manage. 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ # Teach Stach
+ -React + Vite: Frontend framework and building tool.
+ -TailwindCSS: Utility-first styling.
+ -Zustand: State management.
+ -Firebase: Authentication & backend services.
+ -Axios: API requests.
+ -Open Trivia DB API: Quiz questions source.
 
-## Expanding the ESLint configuration
+ # Getting Started
+  # Prerequisites
+    -Node.js(v16 or later)
+    -npm or yarn
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+  # Installation
+    # Clone the repository
+    git clone https://github.com/matshidisolp/stemulate-quiz.git
+
+    # Enter the project directory
+    cd stemulate-quiz
+
+    # Install dependencies
+    npm install
+
+# Run the app
+    npm run dev
+    The app will be available at http://localhost:5173/ by default
+
+# Environment Variables
+Create a .env file in the root directory and add your Firebase configuration:
+VITE_API_URL=https://opentdb.com/api.php
+VITE_FIREBASE_API_KEY=your_firebase_key
+VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+
+# Author
+Matshidiso Pitswane
+GitHuub Profile: https://github.com/matshidisolp
+Email: mpitswane@gmail.com 
+
+
