@@ -65,9 +65,9 @@ Offline quiz mode
 # About the developer
 I'm a Math and Science teacher turned Front-End Developer, passionate about building accessible, meaningful EdTech tools that support real classroom learning. 
 
-    -Front-end focus: React, Zustand, Tailwind CSS
-    -Education background: Secondary school Math & Science
-    -Interests: EdTech, curriculum-aligned platforms, learner-centered UI
+Front-end focus: React, Zustand, Tailwind CSS
+Education background: Secondary school Math & Science
+Interests: EdTech, curriculum-aligned platforms, learner-centered UI
     
     Matshidiso Pitswane
     LinkedIn: https://www.linkedin.com/in/matshidiso-pitswane/
