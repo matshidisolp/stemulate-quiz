@@ -45,14 +45,14 @@ cd stemulate-quiz
 npm install
 
 3️⃣ Environment variables
-Create a .env file in the root directory using the template below:
+Create a `.env` file in the root directory.
 
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
+Copy `.env.example` to `.env` and replace the values with your own Firebase configuration.
+
+> 🔒 Firebase client keys are public and safe to use in frontend applications.
+
+The quiz data is fetched from the Open Trivia Database (OpenTDB).
+
 
 4️⃣ Run the app
 npm run dev
